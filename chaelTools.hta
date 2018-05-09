@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>Chael Tools(auto generate query)</title>
+<HTA:APPLICATION
+  	APPLICATIONNAME="Chael"
+  	ID="MyHTMLapplication"
+  	ICON="http://sjgen14.000webhostapp.com/bk.ico"
+  	VERSION="1.0"
+  	border="thin"
+	borderStyle="raised"
+	caption="yes"
+	contextMenu="yes"
+	innerBorder="yes"
+	maximizeButton="no"
+	minimizeButton="yes"
+	navigable="no"
+	scroll="no"
+	scrollFlat="no" 
+	selection="yes"
+	showInTaskbar="yes"
+	singleInstance="no"
+	sysMenu="yes"
+	windowState="normal"
+/>
+<script language="VBScript">
+	window.resizeto 470,280
+Dim FileName
+Dim strPath
+Function SelectFolder( myStartFolder )
+    ' Standard housekeeping
+    Dim objFolder, objItem, objShell
+    
+    ' Custom error handling
+    On Error Resume Next
+    SelectFolder = vbNull
+
+    ' Create a dialog object
+    Set objShell  = CreateObject( "Shell.Application" )
+    Set objFolder = objShell.BrowseForFolder( 0, "Select Folder", 0, myStartFolder )
+
+    ' Return the path of the selected folder
+    If IsObject( objfolder ) Then SelectFolder = objFolder.Self.Path
+
+    ' Standard housekeeping
+    Set objFolder = Nothing
+    Set objshell  = Nothing
+    On Error Goto 0
+End Function
+function seldir()
+	strPath = SelectFolder( "" )
+	If strPath = vbNull Then
+   	 Msgbox "Select Output Folder First"
+	Else
+   	 document.getElementById("indir").value=strPath
+	End If
+	
+End function
+dim fil
+dim ctrf
+Function writeFile(vv)
+	
+	fil=document.getElementById("indir").value
+	Set objFS = CreateObject("Scripting.FileSystemObject")
+	if objFS.FileExists(fil & "\query.txt") then
+      objFS.DeleteFile fil & "\query.txt"
+   end if
+   
+	strFile = fil & "\query.txt"
+	strTemp = fil & "\temp.txt"
+	objFS.CreateTextFile(fil & "\query.txt")
+	Set objFile = objFS.GetFile(document.getElementById("infile").value)
+	Set objOutFile = objFS.CreateTextFile(strTemp,True)
+	Set ts = objFile.OpenAsTextStream(1,-2)
+   ctrf=0
+	if vv = 1 then
+		Do Until ts.AtEndOfStream
+   		 strLine = ts.ReadLine
+    		' do something with strLine 
+    		if ctrf <1 then
+    			objOutFile.Write("Select brgy_name, city  From V_Locators Where Geocode In (")
+	   	end if
+	   
+    		objOutFile.Write("'"& strLine & "'," & vbCrLf )
+    		ctrf=ctrf + 1
+		Loop
+	end if
+	if vv = 2 then
+		Do Until ts.AtEndOfStream
+   		 strLine = ts.ReadLine
+    		' do something with strLine 
+    		if ctrf <1 then
+    			objOutFile.Write("select a.shape.sdo_point.y latitude from agila.geo_spatial_location_apdu a where geocode in (")
+	   	end if
+	   
+    		objOutFile.Write("'"& strLine & "'," & vbCrLf )
+    		ctrf=ctrf + 1
+		Loop
+	end if
+	
+	msgbox "proccess end"
+	objOutFile.Write(");")
+	objOutFile.Close
+	ts.Close
+	objFS.DeleteFile(strFile)
+	objFS.MoveFile strTemp,strFile 
+End Function
+
+sub uploadread()
+	dim ss
+	set ss=document.getElementById("getfile").value
+	msgbox ss
+End sub
+
+Sub SelectFile 
+	 set FileName=document.getElementById("infile")
+    FileName.value = ""
+    strStartPath = "C:\Test"
+    strFilter = "Text (*.txt;*.csv)| *.txt;*.csv|VBScript (*.vbs;*.vbc)|*.vbs;*.vbc|HTML (*.htm;*.html;*.hta)|*.htm;*.html;*.hta|All Files (*.*)|*.*|"
+    strCaption = "Select a File"
+    FileName.value = Dlg.openfiledlg(CStr(strStartPath), , CStr(strFilter), CStr(strCaption))
+End Sub
+</script>
+</head>
+<body width="100%" scroll="no">
+<center>
+
+
+<table border="0" width="95%">
+	<tr>
+		<td><input type="input" id="indir"><button onclick="seldir()">Select Output Folder</button>
+		<input type="input" id="infile"><button onclick="SelectFile()" id="getfile">Browse Data</button>
+		</td>	
+	</tr>	
+	<tr style="background-color: gray; color:white; text-align: center;"><td>Auto Generate Query&nbsp;</td></tr>
+	<tr>
+		<td>
+			<button onclick="writeFile(1)" name="addk" style="width: 400px;" width="200" >Null Values Barangay and City</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<button onclick="writeFile(2)" name="" style="width: 400px;" width="200">Get latitude logitude using GeoLocation</button>
+		</td>
+	</tr>
+</table>
+
+</center>
+<span style="margin-top:60px; float:right; font-size:8pt;">Contact Me: <a href="mailto:someone@example.com?Subject=Inquire%20Only" target="_top">joydave.negrido@navagis.com</a></span>
+<OBJECT id=Dlg classid="CLSID:3050F4E1-98B5-11CF-BB82-00AA00BDCE0B"  width="0" height="0">
+</body>
+</html>
