@@ -77,7 +77,7 @@ Function writeFile(vv)
    		 strLine = ts.ReadLine
     		' do something with strLine 
     		if ctrf <1 then
-    			objOutFile.Write("Select brgy_name, city  From V_Locators Where Geocode In (")
+    			objOutFile.Write("Select brgy_name, city  From V_Locators Where plant='03' Geocode In (")
 	   	end if
 	   
     		objOutFile.Write("'"& strLine & "'," & vbCrLf )
@@ -89,7 +89,7 @@ Function writeFile(vv)
    		 strLine = ts.ReadLine
     		' do something with strLine 
     		if ctrf <1 then
-    			objOutFile.Write("select a.shape.sdo_point.y latitude from agila.geo_spatial_location_apdu a where geocode in (")
+    			objOutFile.Write("select s.shape.sdo_point.y latitude,s.shape.sdo_point.y longitude from agila.geo_spatial_location_apdu s where du='03' geocode in (")
 	   	end if
 	   
     		objOutFile.Write("'"& strLine & "'," & vbCrLf )
@@ -127,8 +127,8 @@ End Sub
 
 <table border="0" width="95%">
 	<tr>
-		<td><input type="input" id="indir"><button onclick="seldir()">Select Output Folder</button>
-		<input type="input" id="infile" value="C:\query"><button onclick="SelectFile()" id="getfile">Browse Data</button>
+		<td><input type="input" id="indir" value="C:\query"><button onclick="seldir()">Select Output Folder</button>
+		<input type="input" id="infile" value=""><button onclick="SelectFile()" id="getfile">Browse Data</button>
 		</td>	
 	</tr>	
 	<tr style="background-color: gray; color:white; text-align: center;"><td>Auto Generate Query&nbsp;</td></tr>
