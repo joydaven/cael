@@ -77,7 +77,7 @@ Function writeFile(vv)
    		 strLine = ts.ReadLine
     		' do something with strLine 
     		if ctrf <1 then
-    			objOutFile.Write("Select brgy_name, city  From V_Locators Where plant='03' Geocode In (")
+    			objOutFile.Write("Select brgy_name, city  From V_Locators Where plant='03' and Geocode In (")
 	   	end if
 	   
     		objOutFile.Write("'"& strLine & "'," & vbCrLf )
@@ -89,7 +89,7 @@ Function writeFile(vv)
    		 strLine = ts.ReadLine
     		' do something with strLine 
     		if ctrf <1 then
-    			objOutFile.Write("select s.shape.sdo_point.y latitude,s.shape.sdo_point.y longitude from agila.geo_spatial_location_apdu s where du='03' geocode in (")
+    			objOutFile.Write("select s.shape.sdo_point.y latitude,s.shape.sdo_point.y longitude from agila.geo_spatial_location_apdu s where s.du='03' and s.geocode in (")
 	   	end if
 	   
     		objOutFile.Write("'"& strLine & "'," & vbCrLf )
@@ -98,7 +98,7 @@ Function writeFile(vv)
 	end if
 	
 	msgbox "proccess end"
-	objOutFile.Write(");")
+	objOutFile.Write("''" & ");")
 	objOutFile.Close
 	ts.Close
 	objFS.DeleteFile(strFile)
