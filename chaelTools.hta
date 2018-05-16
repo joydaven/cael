@@ -96,8 +96,17 @@ Function writeFile(vv)
     		ctrf=ctrf + 1
 		Loop
 	end if
-	
-	msgbox "proccess end"
+	if vv = 3 then
+		Do Until ts.AtEndOfStream
+   		 strLine = ts.ReadLine 
+    		if ctrf <1 then
+    			objOutFile.Write("Select C.Acct_Id, C.Name,C.Delivery_Address Address,C.Poleno Polenumber,C.Lcno Lcnumber,C.Feeder From Pdata.Disc_Ccb_Customers_Vw C Where C.du='03' and C.Acct_Id in (")
+	   	end if	   
+    		objOutFile.Write("'"& strLine & "'," & vbCrLf )
+    		ctrf=ctrf + 1
+		Loop	
+	end if		
+	msgbox "process end output is in " & document.getElementById("indir").value & "\query.txt"
 	objOutFile.Write("''" & ");")
 	objOutFile.Close
 	ts.Close
@@ -128,18 +137,23 @@ End Sub
 <table border="0" width="95%">
 	<tr>
 		<td><input type="input" id="indir" value="C:\query"><button onclick="seldir()">Select Output Folder</button>
-		<input type="input" id="infile" value=""><button onclick="SelectFile()" id="getfile">Browse Data</button>
+		<input type="input" id="infile" value=""><button onclick="SelectFile()" id="getfile">Browse Key Data</button>
 		</td>	
 	</tr>	
 	<tr style="background-color: gray; color:white; text-align: center;"><td>Auto Generate Query&nbsp;</td></tr>
 	<tr>
 		<td>
-			<button onclick="writeFile(1)" name="addk" style="width: 400px;" width="200" >Null Values Barangay and City</button>
+			<button onclick="writeFile(1)" name="addk" style="width: 400px;" width="200" >Null Values Barangay and City using Geolocation</button>
 		</td>
 	</tr>
 	<tr>
 		<td>
 			<button onclick="writeFile(2)" name="" style="width: 400px;" width="200">Get latitude logitude using GeoLocation</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<button onclick="writeFile(3)" name="" style="width: 400px;" width="200">Get Poleno,address,lcno using Account Id</button>
 		</td>
 	</tr>
 </table>
